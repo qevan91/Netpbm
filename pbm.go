@@ -99,25 +99,32 @@ func (pbm *PBM) Set(x, y int, value bool) {
 	pbm.data[y][x] = value
 }
 
+// Save saves the PBM image to a file with the specified filename.
 func (pbm *PBM) Save(filename string) error {
+	// Create a new file or truncate an existing file
 	file, err := os.Create(filename)
 	if err != nil {
 		return fmt.Errorf("error creating file: %v", err)
 	}
 	defer file.Close()
 
+	// Write the magic number to the file
 	_, err = fmt.Fprintf(file, "%s\n", pbm.magicNumber)
 	if err != nil {
 		return fmt.Errorf("error writing magic number: %v", err)
 	}
 
-	_, err = fmt.Fprintf(file, "%d %d\n", &pbm.width, &pbm.height)
+	// Write the dimensions (width and height) to the file
+	_, err = fmt.Fprintf(file, "%d %d\n", pbm.width, pbm.height)
 	if err != nil {
 		return fmt.Errorf("error writing dimensions: %v", err)
 	}
 
+	// Iterate through each row of pixel data
 	for _, row := range pbm.data {
+		// Iterate through each pixel in the row
 		for _, pixel := range row {
+			// Write pixel data based on the PBM magic number
 			if pbm.magicNumber == "P1" {
 				if pixel {
 					_, err = fmt.Fprint(file, "1 ")
@@ -131,10 +138,12 @@ func (pbm *PBM) Save(filename string) error {
 					_, err = fmt.Fprint(file, "0")
 				}
 			}
+			// Check for errors during pixel data writing
 			if err != nil {
 				return fmt.Errorf("error writing data: %v", err)
 			}
 		}
+		// Add a newline if the magic number is "P1"
 		if pbm.magicNumber == "P1" {
 			_, err = fmt.Fprintln(file)
 			if err != nil {
@@ -143,7 +152,16 @@ func (pbm *PBM) Save(filename string) error {
 		}
 	}
 
-	fmt.Printf("Image sauvegardée avec succès dans %s\n", filename)
+	// Print a success message to the console
+	fmt.Printf("The image is saved in %s\n", filename)
 
 	return nil
+}
+
+func (pbm *PBM) Flip() {
+	for i := 0; i < pbm.height; i++ {
+		for j := 0; j < pbm.width/2; j++ {
+			pbm.data[i][j], pbm.data[i][pbm.width-j-1] = pbm.data[i][pbm.width-j-1], pbm.data[i][j]
+		}
+	}
 }
