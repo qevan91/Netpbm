@@ -99,7 +99,6 @@ func (pbm *PBM) Set(x, y int, value bool) {
 	pbm.data[y][x] = value
 }
 
-// Save saves the PBM image to a file with the specified filename.
 func (pbm *PBM) Save(filename string) error {
 	// Create a new file or truncate an existing file
 	file, err := os.Create(filename)
