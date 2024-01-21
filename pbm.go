@@ -160,7 +160,17 @@ func (pbm *PBM) Save(filename string) error {
 func (pbm *PBM) Flip() {
 	for i := 0; i < pbm.height; i++ {
 		for j := 0; j < pbm.width/2; j++ {
+			//FExchange between two elements of a matrix row
 			pbm.data[i][j], pbm.data[i][pbm.width-j-1] = pbm.data[i][pbm.width-j-1], pbm.data[i][j]
+		}
+	}
+}
+
+func (pbm *PBM) Invert() {
+	for i := 0; i < pbm.height; i++ {
+		for j := 0; j < pbm.width; j++ {
+			// Invert the color by flipping the boolean value
+			pbm.data[i][j] = !pbm.data[i][j]
 		}
 	}
 }

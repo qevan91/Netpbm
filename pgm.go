@@ -105,3 +105,26 @@ func (pgm *PGM) Set(x, y int, value uint8) {
 		pgm.data[y][x] = value
 	}
 }
+
+func (pgm *PGM) Invert() {
+	maxUint8 := uint8(pgm.max)
+	for y := 0; y < pgm.height; y++ {
+		for x := 0; x < pgm.width; x++ {
+			//Invert pixel value
+			pgm.data[y][x] = maxUint8 - pgm.data[y][x]
+		}
+	}
+}
+
+func (pgm *PGM) Flip() {
+	for y := 0; y < pgm.height; y++ {
+		left := 0
+		right := pgm.width - 1
+		//Invert pixel values from left to right
+		for left < right {
+			pgm.data[y][left], pgm.data[y][right] = pgm.data[y][right], pgm.data[y][left]
+			left++
+			right--
+		}
+	}
+}
